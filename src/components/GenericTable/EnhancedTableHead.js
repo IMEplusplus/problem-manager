@@ -13,7 +13,7 @@ class EnhancedTableHead extends React.Component {
   };
 
   render() {
-    const { onSelectAllClick, order, orderBy, numSelected, rowCount, rows } = this.props;
+    const { onSelectAllClick, order, orderBy, numSelected, rowCount, columns } = this.props;
 
     return (
       <TableHead>
@@ -25,25 +25,24 @@ class EnhancedTableHead extends React.Component {
               onChange={onSelectAllClick}
             />
           </TableCell>
-          {rows.map(
-            row => (
+          {columns.map(
+            column => (
               <TableCell
-                key={row.id}
-                align={row.numeric ? 'right' : 'left'}
-                padding={row.disablePadding ? 'none' : 'default'}
-                sortDirection={orderBy === row.id ? order : false}
+                key={column.id}
+                align='center'
+                sortDirection={orderBy === column.id ? order : false}
               >
                 <Tooltip
                   title="Sort"
-                  placement={row.numeric ? 'bottom-end' : 'bottom-start'}
+                  placement={column.numeric ? 'bottom-end' : 'bottom-start'}
                   enterDelay={300}
                 >
                   <TableSortLabel
-                    active={orderBy === row.id}
+                    active={orderBy === column.id}
                     direction={order}
-                    onClick={this.createSortHandler(row.id)}
+                    onClick={this.createSortHandler(column.id)}
                   >
-                    {row.label}
+                    {column.label}
                   </TableSortLabel>
                 </Tooltip>
               </TableCell>
