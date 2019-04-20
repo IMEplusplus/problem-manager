@@ -42,9 +42,9 @@ class NavTabs extends React.Component {
     return (
       <NoSsr>
         <div className={classes.root}>
-          <AppBar position="static" className="">
+          <AppBar position="static">
             <Tabs variant="fullWidth" value={this.props.history.location.pathname} onChange={this.handleChange}>
-              <Tab label="Problems" value="/" />
+              <Tab label="Problems" value="/" className="h3" />
               <Tab label="Solutions" value="/solutions" />
               <Tab label="About us" value="/about" />
             </Tabs>
