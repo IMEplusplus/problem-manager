@@ -10,6 +10,8 @@ import Paper from '@material-ui/core/Paper/index';
 import Checkbox from '@material-ui/core/Checkbox/index';
 import EnhancedTableHead from './EnhancedTableHead'
 import EnhancedTableToolbar from './EnhancedTableToolbar'
+import EditIcon from '@material-ui/icons/Edit';
+import IconButton from '@material-ui/core/IconButton';
 
 function desc(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -145,31 +147,36 @@ class EnhancedTable extends React.Component {
                                                 <Checkbox checked={isSelected} />
                                             </TableCell>
                                             {columns.map(column => <TableCell align="center">{n[column.id]}</TableCell>)}
+                                            <TableCell>
+                                              <IconButton className={classes.button} label="Edit">
+                                                <EditIcon/>
+                                              </IconButton>
+                                            </TableCell>
                                         </TableRow>
                                     );
                                 })}
                             {emptyRows > 0 && (
-                                <TableRow style={{ height: 49 * emptyRows }}>
-                                    <TableCell colSpan={columns.length + 1} />
-                                </TableRow>
+                              <TableRow style={{ height: 49 * emptyRows }}>
+                                  <TableCell colSpan={columns.length + 2} />
+                              </TableRow>
                             )}
                         </TableBody>
                     </Table>
                 </div>
                 <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
-                    component="div"
-                    count={data.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    backIconButtonProps={{
-                        'aria-label': 'Previous Page',
-                    }}
-                    nextIconButtonProps={{
-                        'aria-label': 'Next Page',
-                    }}
-                    onChangePage={this.handleChangePage}
-                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                  rowsPerPageOptions={[5, 10, 25]}
+                  component="div"
+                  count={data.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  backIconButtonProps={{
+                      'aria-label': 'Previous Page',
+                  }}
+                  nextIconButtonProps={{
+                      'aria-label': 'Next Page',
+                  }}
+                  onChangePage={this.handleChangePage}
+                  onChangeRowsPerPage={this.handleChangeRowsPerPage}
                 />
             </Paper>
         );
