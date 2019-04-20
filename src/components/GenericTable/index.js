@@ -146,7 +146,7 @@ class EnhancedTable extends React.Component {
                                             <TableCell padding="checkbox">
                                                 <Checkbox checked={isSelected} />
                                             </TableCell>
-                                            {columns.map(column => <TableCell align="center">{n[column.id]}</TableCell>)}
+                                            {columns.map(column => <TableCell key={column.id} align="center">{n[column.id]}</TableCell>)}
                                             <TableCell>
                                               <IconButton className={classes.button} label="Edit">
                                                 <EditIcon/>
