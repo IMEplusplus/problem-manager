@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
-import GenericTable from './components/GenericTable';
 import LeftMenu from './components/Menu'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { Route, Switch } from 'react-router-dom'
@@ -10,6 +8,9 @@ import Solutions from './components/Solutions'
 import About from './components/About'
 
 const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+  },
   palette: {
     primary: {
       main: "#424242",
@@ -23,17 +24,11 @@ const theme = createMuiTheme({
 });
 
 class App extends Component {
-  handlePageChange = page => this.setState(page);
-
   render() {
-    this.state = {page: "problems"};
-
-    const { page } = this.state;
-
     return (
       <MuiThemeProvider theme={theme}>
         <div className="App">
-          <LeftMenu handlePageChange={this.handlePageChange} page={page}/>
+          <LeftMenu/>
           <Switch>
             <Route path='/solutions' component={Solutions}/>
             <Route path='/about' component={About}/>
