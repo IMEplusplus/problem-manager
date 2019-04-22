@@ -1,11 +1,21 @@
 import React, { Component } from 'react';
 import './App.css';
-import LeftMenu from './components/Menu'
+import Menu from './components/Menu'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { Route, Switch } from 'react-router-dom'
 import Problems from './components/Problems'
 import Solutions from './components/Solutions'
 import About from './components/About'
+import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import thunk from 'redux-thunk'
+import rootReducer from './rootReducer'
+
+const store =  createStore(
+    rootReducer,
+  {},
+    applyMiddleware(thunk)
+)
 
 const theme = createMuiTheme({
   typography: {
@@ -26,16 +36,18 @@ const theme = createMuiTheme({
 class App extends Component {
   render() {
     return (
-      <MuiThemeProvider theme={theme}>
-        <div className="App">
-          <LeftMenu/>
-          <Switch>
-            <Route path='/solutions' component={Solutions}/>
-            <Route path='/about' component={About}/>
-            <Route path='/' component={Problems}/>
-          </Switch>
-        </div>
-      </MuiThemeProvider>
+      <Provider store={store}>
+        <MuiThemeProvider theme={theme}>
+          <div className="App">
+            <Menu/>
+            <Switch>
+              <Route path='/solutions' component={Solutions}/>
+              <Route path='/about' component={About}/>
+              <Route path='/' component={Problems}/>
+            </Switch>
+          </div>
+        </MuiThemeProvider>
+      </Provider>
     );
   }
 }
