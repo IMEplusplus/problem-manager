@@ -1,22 +1,20 @@
-import React from "react";
+import React, { useMemo, useEffect } from "react";
 import GenericTable from "../GenericTable";
+import { connect } from 'react-redux'
 import Link from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
 import Chip from "@material-ui/core/Chip";
-import { create } from "jss";
+import { fetchProblems } from "./actions";
+import * as fetchFunctions from './fetchFunctions'
+window.my = fetchFunctions
 
-const createDatum = rawData => {
-  const datum = [];
-  columns.forEach((column, i) => (datum[column.id] = rawData[i]));
-  datum.key = createDatum.idCounter++;
-
-  return datum;
+const convertData = rows => {
+  return rows.map(row => ({...row, name: createLink(row.name, row.link), tags: createChips(row.tags), key: row.id}))
 };
-createDatum.idCounter = 0;
 
 const columns = [
   { id: "judge", label: "Judge" },
-  { id: "id", label: "Id" },
+  { id: "problemId", label: "Id" },
   { id: "name", label: "Name" },
   { id: "difficulty", label: "Difficulty" },
   { id: "description", label: "Description" },
@@ -24,16 +22,20 @@ const columns = [
   { id: "solution", label: "Solution" }
 ];
 
-const createLink = (link, label = "Link") => (
+const createLink = (label, link) => (
   <Typography>
-    <Link
-      target="_blank"
-      color="secondary"
-      rel="noopener noreferrer"
-      href={link}
-    >
-      {label}
-    </Link>
+    {link ? (
+      <Link
+        target="_blank"
+        color="secondary"
+        rel="noopener noreferrer"
+        href={link}
+      >
+        {label}
+      </Link>
+    ) :
+    label
+    }
   </Typography>
 );
 
@@ -55,68 +57,32 @@ const createChips = tags => (
   </div>
 );
 
-const data = [
-  createDatum([
-    "CodeForces",
-    "203C",
-    createLink("https://google.com", "Adda and the array2"),
-    4,
-    "HW2",
-    createChips(["Binary Search"]),
-    "asdfdf"
-  ]),
-  createDatum([
-    "CodeForces",
-    "203B",
-    "Adda and the array",
-    4,
-    "HW2",
-    createChips(["Prefix sum", "Bit", "SegmentTree"]),
-    "asdfdf",
-    "asdfasdf"
-  ]),
-  createDatum([
-    "CodeForces",
-    "203D",
-    "Adda and the array3",
-    4,
-    "HW3",
-    createChips(["Prefix sum", "Bit", "SegmentTree"]),
-    "asdfdf",
-    "asdfasdf"
-  ]),
-  createDatum([
-    "CodeForces",
-    "203E",
-    "Adda and the array4",
-    4,
-    "HW5",
-    createChips(["Prefix sum", "Bit", "SegmentTree"]),
-    "asdfdf",
-    "asdfasdf"
-  ]),
-  createDatum([
-    "CodeForces",
-    "203E",
-    "Adda and the array4",
-    4,
-    "HW5",
-    createChips(["Prefix sum", "Bit", "SegmentTree"]),
-    "asdfdf",
-    "asdfasdf"
-  ]),
-  createDatum([
-    "CodeForces",
-    "203E",
-    "Adda and the array4",
-    4,
-    "HW5",
-    createChips(["Prefix sum", "Bit", "SegmentTree"]),
-    "asdfdf",
-    "asdfasdf"
-  ])
-];
+/*
+Disabled to decrease internet traffic
 
-export default () => (
-  <GenericTable data={data} columns={columns} title="Problems" />
-);
+const autoRefresh = fetchProblems => () => {
+  fetchProblems()
+  const refreshTimer = setTimeout(autoRefresh(fetchProblems), fetchFunctions.REFRESH_TIME)
+  return () => clearTimeout(refreshTimer)
+}
+ */
+
+const Problems = (props) => {
+  //useEffect(autoRefresh(props.fetchProblems), [])
+  useEffect(props.fetchProblems, [])
+  const { problems } = props
+  return <GenericTable data={useMemo(() => convertData(problems), [problems])} columns={columns} title="Problems" />
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchProblems: () => dispatch(fetchProblems())
+  }
+};
+
+const mapStateToProps = (state) => {
+  return { problems : state.problems }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Problems);
+
