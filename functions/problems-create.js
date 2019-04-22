@@ -4,7 +4,7 @@ import faunadb from 'faunadb' /* Import faunaDB sdk */
 /* configure faunaDB Client with our secret */
 const q = faunadb.query
 const client = new faunadb.Client({
-  secret: "fnADMda2C8ACB0ghMMbtb2q5QbIhIgp0hDZBCb2O",
+  secret: process.env.FAUNADB_SECRET,
 })
 
 /* export our lambda function as named "handler" export */

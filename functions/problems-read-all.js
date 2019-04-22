@@ -2,8 +2,9 @@
 import faunadb from 'faunadb'
 
 const q = faunadb.query
+console.log('FAUNADB', process.env.FAUNADB_SECRET)
 const client = new faunadb.Client({
-  secret: "fnADMda2C8ACB0ghMMbtb2q5QbIhIgp0hDZBCb2O",
+  secret: process.env.FAUNADB_SECRET,
 })
 
 exports.handler = async event => {
