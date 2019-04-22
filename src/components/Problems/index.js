@@ -9,6 +9,7 @@ import * as fetchFunctions from './fetchFunctions'
 window.my = fetchFunctions
 
 const convertData = rows => {
+  if(!rows) return [];
   return rows.map(row => ({...row, name: createLink(row.name, row.link), tags: createChips(row.tags), key: row.id}))
 };
 
