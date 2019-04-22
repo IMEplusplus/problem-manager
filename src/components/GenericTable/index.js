@@ -78,6 +78,11 @@ class EnhancedTable extends React.Component {
         this.setState({ selected: [] });
     };
 
+    handleDelete = async () => {
+        await this.props.handleDelete(this.state.selected);
+        this.setState({ selected: [] });
+    }
+
     handleClick = (event, id) => {
         const { selected } = this.state;
         const selectedIndex = selected.indexOf(id);
@@ -116,7 +121,7 @@ class EnhancedTable extends React.Component {
 
         return (
             <Paper className={classes.root}>
-                <EnhancedTableToolbar numSelected={selected.length} title={title} />
+                <EnhancedTableToolbar numSelected={selected.length} title={title} handleDelete={this.handleDelete} />
                 <div className={classes.tableWrapper}>
                     <Table className={classes.table} aria-labelledby="tableTitle">
                         <EnhancedTableHead

@@ -67,12 +67,20 @@ const autoRefresh = fetchProblems => () => {
   return () => clearTimeout(refreshTimer)
 }
  */
+const handleDelete = fetchProblems => async selected => {
+  await fetchFunctions.deleteProblems(selected)
+  await fetchProblems()
+}
 
 const Problems = (props) => {
   //useEffect(autoRefresh(props.fetchProblems), [])
   useEffect(props.fetchProblems, [])
   const { problems } = props
-  return <GenericTable data={useMemo(() => convertData(problems), [problems])} columns={columns} title="Problems" />
+  return <GenericTable
+    data={useMemo(() => convertData(problems), [problems])}
+    columns={columns} title="Problems"
+    handleDelete={handleDelete(props.fetchProblems)}
+  />
 };
 
 const mapDispatchToProps = dispatch => {
