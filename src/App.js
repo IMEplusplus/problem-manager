@@ -10,11 +10,12 @@ import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk'
 import rootReducer from './rootReducer'
+import logger from 'redux-logger'
 
 const store =  createStore(
     rootReducer,
   {},
-    applyMiddleware(thunk)
+    applyMiddleware(logger, thunk)
 )
 
 const theme = createMuiTheme({
