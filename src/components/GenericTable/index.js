@@ -12,15 +12,17 @@ import EnhancedTableHead from './EnhancedTableHead'
 import EnhancedTableToolbar from './EnhancedTableToolbar'
 import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
+import { Icon } from '@material-ui/core';
 
 function desc(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) {
-        return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-        return 1;
-    }
-    return 0;
+  if (b.rawData[orderBy] < a.rawData[orderBy]) {
+      return -1;
+  }
+  if (b.rawData[orderBy] > a.rawData[orderBy]) {
+      return 1;
+  }
+  return 0;
 }
 
 function stableSort(array, cmp) {
@@ -59,7 +61,17 @@ class EnhancedTable extends React.Component {
         rowsPerPage: 5,
     };
 
+    handleEdit = (handleEdit, key) => event => { 
+      if(this.props.isEditing) return;
+      event.stopPropagation()
+      handleEdit(key)
+    }
+
+    handleSave = async () =>{
+      await this.props.handleSave()
+    }
     handleRequestSort = (event, property) => {
+      if(this.props.isEditing) return;
         const orderBy = property;
         let order = 'desc';
 
@@ -71,6 +83,7 @@ class EnhancedTable extends React.Component {
     };
 
     handleSelectAllClick = event => {
+      if(this.props.isEditing) return;
         if (event.target.checked) {
             this.setState(state => ({ selected: this.props.data.map(n => n.key) }));
             return;
@@ -79,11 +92,13 @@ class EnhancedTable extends React.Component {
     };
 
     handleDelete = async () => {
-        await this.props.handleDelete(this.state.selected);
-        this.setState({ selected: [] });
+      if(this.props.isEditing) return;
+      await this.props.handleDelete(this.state.selected);
+      this.setState({ selected: [] });
     }
 
     handleClick = (event, id) => {
+      if(this.props.isEditing) return;
         const { selected } = this.state;
         const selectedIndex = selected.indexOf(id);
         let newSelected = [];
@@ -105,23 +120,25 @@ class EnhancedTable extends React.Component {
     };
 
     handleChangePage = (event, page) => {
+      if(this.props.isEditing) return;
         this.setState({ page });
     };
 
     handleChangeRowsPerPage = event => {
+      if(this.props.isEditing) return;
         this.setState({ rowsPerPage: event.target.value });
     };
 
     isSelected = id => this.state.selected.indexOf(id) !== -1;
 
     render() {
-        const { classes, columns, data, title } = this.props;
+        const { classes, columns, data, title, handleEdit, handleSave} = this.props;
         const { order, orderBy, selected, rowsPerPage, page } = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
         return (
             <Paper className={classes.root}>
-                <EnhancedTableToolbar numSelected={selected.length} title={title} handleDelete={this.handleDelete} />
+                <EnhancedTableToolbar numSelected={selected.length} title={title} handleDelete={this.handleDelete}/>
                 <div className={classes.tableWrapper}>
                     <Table className={classes.table} aria-labelledby="tableTitle">
                         <EnhancedTableHead
@@ -153,9 +170,13 @@ class EnhancedTable extends React.Component {
                                             </TableCell>
                                             {columns.map(column => <TableCell key={column.id} align="center">{n[column.id]}</TableCell>)}
                                             <TableCell>
-                                              <IconButton className={classes.button} label="Edit">
-                                                <EditIcon/>
-                                              </IconButton>
+                                                {n.key !== undefined 
+                                                ? <IconButton className={classes.button} label="Edit" onClick={this.handleEdit(handleEdit, n.key)}>
+                                                    <EditIcon/>
+                                                  </IconButton>
+                                                : <Button variant="outlined" className={classes.button} onClick={this.handleSave}>
+                                                    Save
+                                                  </Button>}
                                             </TableCell>
                                         </TableRow>
                                     );
