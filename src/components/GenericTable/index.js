@@ -12,6 +12,8 @@ import EnhancedTableHead from './EnhancedTableHead'
 import EnhancedTableToolbar from './EnhancedTableToolbar'
 import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
+import { Icon } from '@material-ui/core';
 import {renderToStaticMarkup} from 'react-dom/server'
 
 function desc(a, b, orderBy) {
@@ -149,14 +151,13 @@ class EnhancedTable extends React.Component {
       }
 
     render() {
-        const { classes, columns, data, title } = this.props;
+        const { classes, columns, data, title, handleEdit, handleSave} = this.props;
         const { order, orderBy, selected, rowsPerPage, page, searchValue } = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
         return (
             <Paper className={classes.root}>
                 <EnhancedTableToolbar numSelected={selected.length} title={title} handleDelete={this.handleDelete} searchValue = {searchValue} handleChange = {this.handleChange} />
-                <EnhancedTableToolbar numSelected={selected.length} title={title} handleDelete={this.handleDelete}/>
                 <div className={classes.tableWrapper}>
                     <Table className={classes.table} aria-labelledby="tableTitle">
                         <EnhancedTableHead
