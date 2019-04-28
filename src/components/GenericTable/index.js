@@ -12,6 +12,7 @@ import EnhancedTableHead from './EnhancedTableHead'
 import EnhancedTableToolbar from './EnhancedTableToolbar'
 import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
+import {renderToStaticMarkup} from 'react-dom/server'
 
 function desc(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -50,6 +51,7 @@ const styles = theme => ({
     },
 });
 
+
 class EnhancedTable extends React.Component {
     state = {
         order: 'asc',
@@ -57,6 +59,7 @@ class EnhancedTable extends React.Component {
         selected: [],
         page: 0,
         rowsPerPage: 5,
+        searchValue: '',
     };
 
     handleRequestSort = (event, property) => {
@@ -114,14 +117,30 @@ class EnhancedTable extends React.Component {
 
     isSelected = id => this.state.selected.indexOf(id) !== -1;
 
+    handleChange = event => {
+        this.setState({ searchValue: event.target.value });
+    }
+
+    isSearchValid = value => {
+        let searchValue = this.state.searchValue;
+        if(searchValue === '') return true;
+        for (let [key, property] of Object.entries(value)){
+            // key added for further features
+            let aux = React.isValidElement(property) ? renderToStaticMarkup(property).toString() : property.toString();
+            let res = aux.match(searchValue);
+            if(res != null) return true;
+        }
+        return false;
+      }
+
     render() {
         const { classes, columns, data, title } = this.props;
-        const { order, orderBy, selected, rowsPerPage, page } = this.state;
+        const { order, orderBy, selected, rowsPerPage, page, searchValue } = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
         return (
             <Paper className={classes.root}>
-                <EnhancedTableToolbar numSelected={selected.length} title={title} handleDelete={this.handleDelete} />
+                <EnhancedTableToolbar numSelected={selected.length} title={title} handleDelete={this.handleDelete} searchValue = {searchValue} handleChange = {this.handleChange} />
                 <div className={classes.tableWrapper}>
                     <Table className={classes.table} aria-labelledby="tableTitle">
                         <EnhancedTableHead
@@ -134,7 +153,9 @@ class EnhancedTable extends React.Component {
                             columns={columns}
                         />
                         <TableBody>
-                            {stableSort(data, getSorting(order, orderBy))
+                            {  
+                                stableSort(data, getSorting(order, orderBy))
+                                .filter(this.isSearchValid)
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map(n => {
                                     const isSelected = this.isSelected(n.key);
