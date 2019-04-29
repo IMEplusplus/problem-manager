@@ -76,23 +76,19 @@ const createChips = tags => (
   </div>
 );
 
-/*
-Disabled to decrease internet traffic
-
 const autoRefresh = fetchProblems => () => {
   fetchProblems()
   const refreshTimer = setTimeout(autoRefresh(fetchProblems), fetchFunctions.REFRESH_TIME)
   return () => clearTimeout(refreshTimer)
 }
- */
+
 const handleDelete = fetchProblems => async selected => {
   await fetchFunctions.deleteProblems(selected)
   await fetchProblems()
 }
 
 const Problems = (props) => {
-  //useEffect(autoRefresh(props.fetchProblems), [])
-  useEffect(props.fetchProblems, [])
+  useEffect(autoRefresh(props.fetchProblems), [])
   const [isEditing, setIsEditing]=useState(null);
   const [editingRow, setEditingRow] = useState({})
   const { problems } = props
