@@ -12,7 +12,9 @@ const styles = {
     padding: '2px 4px',
     display: 'flex',
     alignItems: 'center',
-    width: 400,
+    flexGrow: 1,
+    border: '1px rgb(224, 224, 224) solid',
+    borderRadius: '5px',
   },
   input: {
     marginLeft: 8,
@@ -32,15 +34,12 @@ function CustomizedInputBase(props) {
     const { classes, value, onChange} = props;
 
   return (
-    <Paper className={classes.root} elevation={1}>
-      <IconButton className={classes.iconButton} aria-label="Menu">
-        <MenuIcon />
-      </IconButton>
+    <div className={classes.root} elevation={1}>
       <InputBase value = {value} onChange={onChange} className={classes.input} placeholder="Search..." />
       <IconButton className={classes.iconButton} aria-label="Search">
         <SearchIcon />
       </IconButton>
-    </Paper>
+    </div>
   );
 }
 

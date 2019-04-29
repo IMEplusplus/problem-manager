@@ -53,6 +53,9 @@ const EnhancedTableToolbar = props => {
 const toolbarStyles = theme => ({
   root: {
     paddingRight: theme.spacing.unit,
+    display: 'flex',
+    justifyContent: 'space-between'
+    //flexWrap: 'wrap',
   },
   
   highlight:
@@ -68,7 +71,7 @@ const toolbarStyles = theme => ({
     
 
   spacer: {
-    flex: '1 1 100%',
+    width: 20
   },
   actions: {
     color: theme.palette.text.secondary,
