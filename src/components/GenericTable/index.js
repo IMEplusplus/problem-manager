@@ -143,8 +143,8 @@ class EnhancedTable extends React.Component {
         if(searchValue === '') return true;
         for (let [key, property] of Object.entries(value)){
             // key added for further features
-            let aux = React.isValidElement(property) ? renderToStaticMarkup(property).toString() : property.toString();
-            let res = aux.match(searchValue);
+            let aux = React.isValidElement(property) ? renderToStaticMarkup(property).toString().toLowerCase() : property.toString().toLowerCase();
+            let res = aux.match(searchValue.toLowerCase());
             if(res != null) return true;
         }
         return false;
